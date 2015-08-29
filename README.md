@@ -1,5 +1,5 @@
 # ember-cli-geo
-[![Code Climate](https://codeclimate.com/github/igorpreston/ember-cli-geo/badges/gpa.svg)](https://codeclimate.com/github/igorpreston/ember-cli-geo)
+[![Code Climate](https://codeclimate.com/github/igorpreston/ember-cli-geo/badges/gpa.svg)](https://codeclimate.com/github/igorpreston/ember-cli-geo) [![Build Status](https://travis-ci.org/igorpreston/ember-cli-geo.svg)](https://travis-ci.org/igorpreston/ember-cli-geo)
 
 This addon is a go-to solution for integrating HTML5 Geolocation API into your Ember.js web app.
 It is production-ready and is actively used in my own real-world web apps.
@@ -85,7 +85,7 @@ In your route:
 // app/routes/geolocator.js
 
 export default Ember.Route.extend({
-  
+
   actions: {
     getUserLocation: function() {
       this.get('geolocation').getLocation().then(function(geoObject) {
