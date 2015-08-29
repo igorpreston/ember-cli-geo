@@ -1,4 +1,5 @@
 # ember-cli-geo
+[![Code Climate](https://codeclimate.com/github/igorpreston/ember-cli-geo/badges/gpa.svg)](https://codeclimate.com/github/igorpreston/ember-cli-geo)
 
 This addon is a go-to solution for integrating HTML5 Geolocation API into your Ember.js web app.
 It is production-ready and is actively used in my own real-world web apps.
