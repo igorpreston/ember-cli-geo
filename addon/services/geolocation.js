@@ -4,33 +4,31 @@ export default Ember.Service.extend(Ember.Evented, {
 
   currentLocation: null,
 
-  getLocation: function(geoOptions) {
-    var self = this;
+  getLocation(geoOptions) {
 
-    return new Ember.RSVP.Promise(function(resolve, reject) {
-
-      navigator.geolocation.getCurrentPosition(function(geoObject) {
-        self.trigger('geolocationSuccess', geoObject, resolve);
-      }, function(reason) {
-        self.trigger('geolocationFail', reason, reject);
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition((geoObject) => {
+        this.trigger('geolocationSuccess', geoObject, resolve);
+      }, (reason) => {
+        this.trigger('geolocationFail', reason, reject);
       }, geoOptions);
     });
+
   },
 
-  trackLocation: function(geoOptions) {
-    var self = this;
+  trackLocation(geoOptions) {
 
-    return new Ember.RSVP.Promise(function(resolve, reject) {
-
-      navigator.geolocation.watchPosition(function(geoObject) {
-        self.trigger('geolocationSuccess', geoObject, resolve);
-      }, function(reason) {
-        self.trigger('geolocationFail', reason, reject);
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      navigator.geolocation.watchPosition((geoObject) => {
+        this.trigger('geolocationSuccess', geoObject, resolve);
+      }, (reason) => {
+        this.trigger('geolocationFail', reason, reject);
       }, geoOptions);
     });
+
   },
 
-  geolocationDidSucceed: Ember.on('geolocationSuccess', function(geoObject, resolve) {
+  geoocationDidSucceed: Ember.on('geolocationSuccess', function(geoObject, resolve) {
     this.set('currentLocation', [geoObject.coords.latitude, geoObject.coords.longitude]);
     resolve(geoObject);
   }),

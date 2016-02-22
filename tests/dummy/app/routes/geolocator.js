@@ -4,26 +4,22 @@ export default Ember.Route.extend({
   geolocation: Ember.inject.service(),
 
   actions: {
-    getUserLocation: function(geoOptions) {
-      var self = this;
-
-      this.get('geolocation').getLocation().then(function(geoObject) {
-        let currentLocation = self.get('geolocation').get('currentLocation');
-        self.controllerFor('geolocator').set('userLocation', currentLocation);
-      }, function(reason) {
+    getUserLocation(geoOptions) {
+      this.get('geolocation').getLocation().then((geoObject) => {
+        let currentLocation = this.get('geolocation').get('currentLocation');
+        this.controllerFor('geolocator').set('userLocation', currentLocation);
+      }, (reason) => {
         console.log('Geolocation failed because ' + reason);
-      }, geoOptions);
+      });
     },
 
-    trackUserLocation: function(geoOptions) {
-      var self = this;
-
-      this.get('geolocation').trackLocation().then(function(geoObject) {
-        let currentLocation = self.get('geolocation').get('currentLocation');
-        self.controllerFor('geolocator').set('userLocation', currentLocation);
-      }, function(reason) {
+    trackUserLocation(geoOptions) {
+      this.get('geolocation').trackLocation().then((geoObject) => {
+        let currentLocation = this.get('geolocation').get('currentLocation');
+        this.controllerFor('geolocator').set('userLocation', currentLocation);
+      }, (reason) => {
         console.log('Geolocation failed because ' + reason);
-      }, geoOptions);
+      });
     }
   }
 
