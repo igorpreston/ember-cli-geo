@@ -1,16 +1,11 @@
 {
-  "name": "ember-cli-geo",
+  "name": "ember-drag-n-drop",
   "dependencies": {
-    "ember": "components/ember#canary",
+    "ember": "~2.4.1",
     "ember-cli-shims": "0.1.0",
-    "ember-cli-test-loader": "ember-cli/ember-cli-test-loader#0.2.2",
-    "ember-qunit-notifications": "0.1.0",
+    "ember-cli-test-loader": "0.2.2",
     "mocha": "~2.2.4",
     "chai": "~2.3.0",
-    "ember-mocha-adapter": "~0.3.1",
-    "ember-mocha": "~0.8.8"
-  },
-  "resolutions": {
-    "ember": "canary"
+    "ember-mocha-adapter": "~0.3.1"
   }
 }
