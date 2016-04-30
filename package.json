@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-geo",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Geolocation service for Ember.js web apps",
   "directories": {
     "doc": "doc",
