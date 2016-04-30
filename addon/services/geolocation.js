@@ -28,7 +28,7 @@ export default Ember.Service.extend(Ember.Evented, {
 
   },
 
-  geoocationDidSucceed: Ember.on('geolocationSuccess', function(geoObject, resolve) {
+  geolocationDidSucceed: Ember.on('geolocationSuccess', function(geoObject, resolve) {
     this.set('currentLocation', [geoObject.coords.latitude, geoObject.coords.longitude]);
     resolve(geoObject);
   }),
