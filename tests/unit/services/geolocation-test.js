@@ -1,7 +1,7 @@
 /* jshint expr:true */
 import Ember from 'ember';
 import { expect } from 'chai';
-import { describe, afterEach } from 'mocha';
+import { describe } from 'mocha';
 import {
   describeModule,
   it
@@ -54,11 +54,6 @@ describeModule(
         },
         timestamp: 1435861233751
       };
-
-      afterEach('set current location to null', function() {
-        let service = this.subject();
-        service.set('currentLocation', null);
-      });
 
       it('gets user geolocation', function() {
         function getLocation() {
