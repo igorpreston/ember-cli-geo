@@ -1,7 +1,12 @@
 /* jshint expr:true */
 import Ember from 'ember';
+import sinon from 'sinon';
 import { expect } from 'chai';
-import { describe } from 'mocha';
+import {
+  describe,
+  beforeEach,
+  afterEach,
+} from 'mocha';
 import {
   describeModule,
   it
@@ -11,11 +16,18 @@ describeModule(
   'service:geolocation',
   'GeolocationService',
   {
-    // Specify the other units that are required for this test.
-    // needs: ['service:foo']
   },
   function() {
-    // Replace this with your real tests.
+
+    // phantomjs doesn't know about geolocation
+    if (window.navigator.geolocation == null) {
+      window.navigator.geolocation = {
+        getCurrentPosition: () => {},
+        watchPosition: () => {},
+        clearWatch: () => {}
+      };
+    }
+
     it('exists', function() {
       let service = this.subject();
       expect(service).to.be.ok;
@@ -23,26 +35,30 @@ describeModule(
 
     describe('checks if it', function() {
 
-      it('can get user geolocation', function() {
+      it('responds to `geolocation`', function() {
         let service = this.subject();
         expect(service).itself.to.respondTo('getLocation');
       });
 
-      it('can track user geolocation', function() {
+      it('responds to `trackLocation`', function() {
         let service = this.subject();
         expect(service).itself.to.respondTo('trackLocation');
       });
 
-      it('has current location', function() {
+      it('has property `currentLocation`', function() {
         let service = this.subject();
         expect(service).to.have.property('currentLocation');
+      });
+
+      it('responds to `stopTracking`', function() {
+        let service = this.subject();
+        expect(service).to.have.property('stopTracking');
       });
 
     });
 
     describe('determines geolocation and', function() {
-
-      let geoObject = {
+      const geoObject = {
         coords: {
           accuracy: 100,
           altitude: 0,
@@ -54,55 +70,114 @@ describeModule(
         },
         timestamp: 1435861233751
       };
+      let sandbox;
 
-      it('gets user geolocation', function() {
-        function getLocation() {
-          return new Ember.RSVP.Promise(function(resolve, reject) {
-            resolve(geoObject);
-          });
-        }
+      beforeEach(function() {
+        sandbox = sinon.sandbox.create();
 
-        getLocation().then(function(geoObject) {
-          expect(geoObject).to.be.an('object').and.to.have.all.keys(['coords', 'timestamp']);
-          expect(geoObject).to.have.deep.property('coords.latitude', 37.789).that.is.a('number');
-          expect(geoObject).to.have.deep.property('coords.longitude', -122.412).that.is.a('number');
+        sandbox.stub(window.navigator.geolocation, 'getCurrentPosition', (fn) =>{
+          fn.call(null, geoObject);
         });
       });
 
-      it('sets user\'s current location', function() {
-        let service = this.subject();
+      afterEach(function() {
+        sandbox.restore();
+      });
 
-        function getLocation() {
-          return new Ember.RSVP.Promise(function(resolve, reject) {
-            service.trigger('geolocationSuccess', geoObject, resolve);
-          });
-        }
+      it('gets user geolocation from window.navigator', function(done) {
+        const service = this.subject();
 
-        getLocation().then(function() {
+        service.getLocation().then(function(result) {
+          expect(result).to.equal(geoObject);
+          done();
+        });
+      });
+
+      it('sets user\'s current location in the `currentLocation` property', function(done) {
+        const service = this.subject();
+
+        expect(service).to.have.property('currentLocation').that.is.null;
+        service.getLocation().then(function() {
           expect(service).to.have.property('currentLocation').that.is.an('array').and.not.null;
+          done();
         });
       });
 
-      it('throws an error if user denied to share her location', function() {
-        let service = this.subject();
+      it('#startTracking receives a callback function that\'s called whenever a new position is tracked', function() {
+        const service = this.subject();
 
-        function getLocation() {
-          return new Ember.RSVP.Promise(function(resolve, reject) {
-            let reason = "access rejected by user";
-            service.trigger('geolocationFail', reason, reject);
-          });
-        }
-
-        getLocation().then(function() {
-          throw new Error('User denied sharing her geolocation!');
-        }, function() {
-          expect(service).to.have.property('currentLocation').that.is.null;
+        sandbox.stub(window.navigator.geolocation, 'watchPosition', (fn) =>{
+          fn.call(null, geoObject);
+          fn.call(null, geoObject);
+          fn.call(null, geoObject);
         });
+
+        let spy = sinon.spy();
+
+        service.trackLocation(null, spy);
+
+        expect(spy.callCount).to.equal(3, 'callback is not called when new position is available');
+      });
+
+      it('#stopTracking removes tracker from browser loop', function() {
+        const service = this.subject();
+        let spy = sandbox.spy(window.navigator.geolocation, 'clearWatch');
+
+        service.stopTracking();
+
+        expect(spy.calledOnce).to.equal(true, '#clearWatch should be called on browser geolocation');
+      });
+
+      it('fails if the browser cannot provide location', function(done) {
+        const service = this.subject();
+        let successCbCalled = false;
+
+        sandbox.restore();
+        sandbox.stub(window.navigator.geolocation, 'getCurrentPosition', (success, fail) =>{
+          // PositionError is a number `short` representing the error
+          fail.call(null, 1);
+        });
+
+        service.getLocation().then(() => {
+            successCbCalled = true;
+          }, (result) => {
+            expect(service).to.have.property('currentLocation').that.is.null;
+            expect(result).to.equal(1, 'the error callback didn\'t receive the correct param');
+            expect(successCbCalled).to.not.equal(true, 'succcess callback shouldn\'t have been called');
+            done();
+        });
+      });
+
+      it('emits an event `geolocationSuccess` with the position when it\'s fetched', function(done) {
+        const service = this.subject();
+
+        service.on('geolocationSuccess', (result) => {
+          expect(result).to.equal(geoObject, 'results should be sent to the listener');
+          done();
+        });
+
+        service.getLocation();
+      });
+
+      it('emits an event `geolocationFail` with the error when it fails', function(done) {
+        const service = this.subject();
+
+        sandbox.restore();
+        sandbox.stub(window.navigator.geolocation, 'getCurrentPosition', (success, fail) =>{
+          // PositionError is a number `short` representing the error
+          fail.call(null, 1);
+        });
+
+        service.on('geolocationFail', (result) => {
+          expect(result).to.equal(1, 'results should be sent to the listener');
+          service.off('geolocationFail');
+          done();
+        });
+
+        service.getLocation();
       });
 
     });
-
-
 
   }
 );
