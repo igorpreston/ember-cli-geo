@@ -128,6 +128,16 @@ describeModule(
         expect(spy.calledOnce).to.equal(true, '#clearWatch should be called on browser geolocation');
       });
 
+      it('#stopTracking can clear currentLocation', function() {
+        const service = this.subject();
+        let spy = sandbox.spy(window.navigator.geolocation, 'clearWatch');
+
+        service.stopTracking(true);
+
+        expect(spy.calledOnce).to.equal(true, '#clearWatch should be called on browser geolocation');
+        expect(service.get('currentLocation')).to.equal(null, 'currentLocation should be cleared');
+      });
+
       it('fails if the browser cannot provide location', function(done) {
         const service = this.subject();
         let successCbCalled = false;
