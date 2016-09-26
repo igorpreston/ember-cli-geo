@@ -55,11 +55,14 @@ export default Ember.Service.extend(Ember.Evented, {
     });
   },
 
-  stopTracking() {
+  stopTracking(clearLocation) {
     let watcher = this.get('watcherId');
     Ember.assert(watcher != null, 'Warning: `stopTracking` was called but location isn\'t tracked');
     this.get('geolocator').clearWatch(watcher);
     this.set('watcherId', null);
+    if (clearLocation === true) {
+        this.set('currentLocation', null);
+    }
   },
 
 });
