@@ -7,24 +7,29 @@ export default Ember.Service.extend(Ember.Evented, {
   }),
 
   _handleNewPosition(geoObject) {
-      this.set('currentLocation', [geoObject.coords.latitude, geoObject.coords.longitude]);
-      const callback = this.get('trackingCallback');
-      if (callback) {
-        callback(geoObject);
-      }
-      this.trigger('geolocationSuccess', geoObject);
+    this.set('currentLocation', [geoObject.coords.latitude, geoObject.coords.longitude]);
+    const callback = this.get('trackingCallback');
+    if (callback) {
+      callback(geoObject);
+    }
+    this.trigger('geolocationSuccess', geoObject);
   },
 
   currentLocation: null,
 
   getLocation(geoOptions) {
+    let that = this;
     return new Ember.RSVP.Promise((resolve, reject) => {
       this.get('geolocator').getCurrentPosition((geoObject) => {
         this._handleNewPosition(geoObject);
-        resolve(geoObject);
+        Ember.run.next(that, function () {
+          resolve(geoObject);
+        });
       }, (reason) => {
         this.trigger('geolocationFail', reason);
-        reject(reason);
+        Ember.run.next(that, function () {
+          reject(reason);
+        });
       }, geoOptions);
     });
   },
@@ -38,19 +43,23 @@ export default Ember.Service.extend(Ember.Evented, {
       Ember.assert(typeof callback === 'function', "callback should be a function");
     }
     this.set('trackingCallback', callback);
-
+    let that = this;
     return new Ember.RSVP.Promise((resolve, reject) => {
       let watcherId = this.get('geolocator').watchPosition((geoObject) => {
         // make sure this logic is run only once
         if (resolve) {
           this.set('watcherId', watcherId);
-          resolve(geoObject);
-          resolve = null;
+          Ember.run.next(that, function () {
+            resolve(geoObject);
+            resolve = null;
+          });
         }
         this._handleNewPosition(geoObject);
       }, (reason) => {
         this.trigger('geolocationFail', reason);
-        reject(reason);
+        Ember.run.next(that, function () {
+          reject(reason);
+        });
       }, geoOptions);
     });
   },
@@ -61,7 +70,7 @@ export default Ember.Service.extend(Ember.Evented, {
     this.get('geolocator').clearWatch(watcher);
     this.set('watcherId', null);
     if (clearLocation === true) {
-        this.set('currentLocation', null);
+      this.set('currentLocation', null);
     }
   },
 
