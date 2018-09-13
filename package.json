@@ -2,54 +2,63 @@
   "name": "ember-cli-geo",
   "version": "4.0.0",
   "description": "Geolocation service for Ember.js web apps",
-  "directories": {
-    "doc": "doc",
-    "test": "tests"
-  },
-  "scripts": {
-    "build": "ember build",
-    "start": "ember server",
-    "test": "ember try:testall"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/igorpreston/ember-cli-geo"
-  },
-  "engines": {
-    "node": ">= 0.10.0"
-  },
-  "author": "Igor Preston igorpreston@gmail.com",
-  "license": "MIT",
-  "devDependencies": {
-    "broccoli-asset-rev": "^2.2.0",
-    "ember-cli": "2.5.0",
-    "ember-cli-app-version": "^1.0.0",
-    "ember-cli-dependency-checker": "^1.2.0",
-    "ember-cli-htmlbars": "^1.0.1",
-    "ember-cli-htmlbars-inline-precompile": "^0.3.1",
-    "ember-cli-inject-live-reload": "^1.3.1",
-    "ember-cli-jshint": "^1.0.0",
-    "ember-cli-mocha": "0.10.1",
-    "ember-cli-release": "0.2.8",
-    "ember-cli-sri": "^2.1.0",
-    "ember-cli-uglify": "^1.2.0",
-    "ember-disable-prototype-extensions": "^1.1.0",
-    "ember-disable-proxy-controllers": "^1.0.1",
-    "ember-export-application-global": "^1.0.4",
-    "ember-load-initializers": "^0.5.0",
-    "ember-resolver": "^2.0.3",
-    "ember-sinon": "^0.5.1",
-    "ember-try": "^0.1.2",
-    "loader.js": "^4.0.0"
-  },
   "keywords": [
     "ember-addon",
     "geolocation",
     "geo",
     "geoservice"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/igorpreston/ember-cli-geo"
+  },
+  "license": "MIT",
+  "author": "Igor Preston igorpreston@gmail.com",
+  "directories": {
+    "doc": "doc",
+    "test": "tests"
+  },
+  "scripts": {
+    "build": "ember build",
+    "lint:hbs": "ember-template-lint .",
+    "lint:js": "eslint .",
+    "start": "ember serve",
+    "test": "ember test",
+    "test:all": "ember try:each"
+  },
   "dependencies": {
-    "ember-cli-babel": "^5.1.5"
+    "ember-cli-babel": "^6.16.0"
+  },
+  "devDependencies": {
+    "@ember/optional-features": "^0.6.3",
+    "broccoli-asset-rev": "^2.7.0",
+    "ember-cli": "~3.4.2",
+    "ember-cli-chai": "^0.5.0",
+    "ember-cli-dependency-checker": "^3.0.0",
+    "ember-cli-eslint": "^4.2.3",
+    "ember-cli-htmlbars": "^3.0.0",
+    "ember-cli-htmlbars-inline-precompile": "^1.0.3",
+    "ember-cli-inject-live-reload": "^1.8.2",
+    "ember-cli-mocha": "^0.15.0",
+    "ember-cli-sri": "^2.1.1",
+    "ember-cli-template-lint": "^1.0.0-beta.1",
+    "ember-cli-uglify": "^2.1.0",
+    "ember-disable-prototype-extensions": "^1.1.3",
+    "ember-disable-proxy-controllers": "^1.0.1",
+    "ember-export-application-global": "^2.0.0",
+    "ember-load-initializers": "^1.1.0",
+    "ember-maybe-import-regenerator": "^0.1.6",
+    "ember-resolver": "^5.0.1",
+    "ember-sinon": "^0.5.1",
+    "ember-source": "~3.4.0",
+    "ember-source-channel-url": "^1.1.0",
+    "ember-try": "^1.0.0",
+    "eslint-plugin-ember": "^5.2.0",
+    "eslint-plugin-node": "^7.0.1",
+    "loader.js": "^4.7.0"
+  },
+  "engines": {
+    "node": "6.* || 8.* || >= 10.*"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"
