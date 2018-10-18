@@ -44,7 +44,7 @@ export default Service.extend(Evented, {
     this.set('trackingCallback', callback);
 
     return new EmberPromise((resolve, reject) => {
-      let watcherId = this.get('geolocator').watchPosition((geoObject) => {
+      watcherId = this.get('geolocator').watchPosition((geoObject) => {
         // make sure this logic is run only once
         if (resolve) {
           this.set('watcherId', watcherId);
