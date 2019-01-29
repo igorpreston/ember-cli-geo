@@ -4,7 +4,6 @@
 This addon is a go-to solution for integrating HTML5 Geolocation API into your Ember.js web app.
 It is production-ready and backwards compatible.
 
-
 ## Installation
 
 ```
@@ -24,7 +23,7 @@ this.get('geolocation').getLocation().then(function(geoObject) {
 It corresponds to _getCurrentPosition() in HTML5 Geolocation API_. Learn more at [getCurentPosition() on MDN](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/getCurrentPosition).
 It emits an event `geolocationSuccess` with an object describing the geolocation when the position is available. If it fails, it emits an event `geolocationFail` with a reason.
 #### trackLocation()
-`trackLocation()` gets user location and setups a watcher which observes any changes occuring to user location. It then constantly updates `currentLocation` with the most recent location coordinates. 
+`trackLocation()` gets user location and setups a watcher which observes any changes occuring to user location. It then constantly updates `currentLocation` with the most recent location coordinates.
 
 It accepts __geoOptions__ as an argument. Returns an __Ember.RSVP.Promise__ which is either resolved with __geoObject__ containing all data about user location or is rejected with __reason__ which explains why geolocation failed.
 It accepts an optional __callback__ function, that is called whenever the position is updated.
@@ -44,7 +43,7 @@ service.on('geolocationSuccess', (geoObject) => { { /* will be called with new p
 ```
 It corresponds to _watchPosition() in HTML5 Geolocation API_. Learn more at [watchPosition() on MDN](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/watchPosition).
 #### stopTracking
-`stopTracking()` stops the app from continuously updating the user location. 
+`stopTracking()` stops the app from continuously updating the user location.
 
 It accepts an optional boolean parameter that clears `currentLocation` if it's true.
 
@@ -136,14 +135,3 @@ In your template:
   {{userLocation}}
 {{/if}}
 ```
-
-## Running Tests
-
-* `ember test`
-* `ember test --server`
-
-## Building
-
-* `ember build`
-
-For more information on using ember-cli, visit [http://www.ember-cli.com/](http://www.ember-cli.com/).
