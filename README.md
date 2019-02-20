@@ -93,8 +93,11 @@ It corresponds to _PositionOptions object in HMTL5 Geolocation API_. Learn more 
 #### Setup geolocation service
 In order to use geolocation inside of your _Ember.Route_ you should directly inject it to the one:
 ```js
-export default Ember.Route.extend({
-  geolocation: Ember.inject.service()
+import Route from '@ember/routing/route';
+import { inject as service } from '@ember/service';
+
+export default Route.extend({
+  geolocation: service()
 });
 ```
 
@@ -103,12 +106,13 @@ You need to implement a custom action which will call the geolocation service.
 In your route:
 ```js
 // app/routes/geolocator.js
+import Route from '@ember/routing/route';
 
-export default Ember.Route.extend({
+export default Route.extend({
 
   actions: {
     getUserLocation: function() {
-      this.get('geolocation').getLocation().then(function(geoObject) {
+      this.get('geolocation').getLocation().then((geoObject) => {
         var currentLocation = this.get('geolocation').get('currentLocation');
         this.controllerFor('geolocator').set('userLocation', currentLocation);
       });
@@ -120,8 +124,9 @@ export default Ember.Route.extend({
 In your controller:
 ```js
 // app/controllers/geolocator.js
+import Controller from '@ember/controller';
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   userLocation: null
 });
 ```
@@ -130,7 +135,7 @@ In your template:
 ```js
 // app/templates/geolocator.hbs
 
-<button type="button" {{action 'getUserLocation'}}>Geolocate me!</button>
+<button type="button" {{action "getUserLocation"}}>Geolocate me!</button>
 {{#if userLocation}}
   {{userLocation}}
 {{/if}}
